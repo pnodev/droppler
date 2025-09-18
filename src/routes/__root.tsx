@@ -14,6 +14,7 @@ import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { Header } from "~/components/Shell/Header";
+import { ClerkProvider } from "@clerk/tanstack-react-start";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -76,19 +77,21 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html>
-      <head>
-        <HeadContent />
-      </head>
-      <body className="flex flex-col h-screen px-6">
-        <Header />
-        <div className="px-5 max-w-(--page-width) w-full mx-auto">
-          {children}
-        </div>
-        <TanStackRouterDevtools position="bottom-right" />
-        <ReactQueryDevtools buttonPosition="bottom-left" />
-        <Scripts />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html>
+        <head>
+          <HeadContent />
+        </head>
+        <body className="flex flex-col h-screen px-6">
+          <Header />
+          <div className="px-5 max-w-(--page-width) w-full mx-auto">
+            {children}
+          </div>
+          <TanStackRouterDevtools position="bottom-right" />
+          <ReactQueryDevtools buttonPosition="bottom-left" />
+          <Scripts />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

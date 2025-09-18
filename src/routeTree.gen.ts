@@ -11,12 +11,24 @@
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as BucketsRouteImport } from './routes/buckets'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UploadBucketIdRouteImport } from './routes/upload.$bucketId'
 import { ServerRoute as ApiUploadthingServerRouteImport } from './routes/api/uploadthing'
 
 const rootServerRouteImport = createServerRootRoute()
 
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BucketsRoute = BucketsRouteImport.update({
+  id: '/buckets',
+  path: '/buckets',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -35,27 +47,35 @@ const ApiUploadthingServerRoute = ApiUploadthingServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/buckets': typeof BucketsRoute
+  '/dashboard': typeof DashboardRoute
   '/upload/$bucketId': typeof UploadBucketIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/buckets': typeof BucketsRoute
+  '/dashboard': typeof DashboardRoute
   '/upload/$bucketId': typeof UploadBucketIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/buckets': typeof BucketsRoute
+  '/dashboard': typeof DashboardRoute
   '/upload/$bucketId': typeof UploadBucketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/upload/$bucketId'
+  fullPaths: '/' | '/buckets' | '/dashboard' | '/upload/$bucketId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/upload/$bucketId'
-  id: '__root__' | '/' | '/upload/$bucketId'
+  to: '/' | '/buckets' | '/dashboard' | '/upload/$bucketId'
+  id: '__root__' | '/' | '/buckets' | '/dashboard' | '/upload/$bucketId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BucketsRoute: typeof BucketsRoute
+  DashboardRoute: typeof DashboardRoute
   UploadBucketIdRoute: typeof UploadBucketIdRoute
 }
 export interface FileServerRoutesByFullPath {
@@ -82,6 +102,20 @@ export interface RootServerRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buckets': {
+      id: '/buckets'
+      path: '/buckets'
+      fullPath: '/buckets'
+      preLoaderRoute: typeof BucketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -112,6 +146,8 @@ declare module '@tanstack/react-start/server' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BucketsRoute: BucketsRoute,
+  DashboardRoute: DashboardRoute,
   UploadBucketIdRoute: UploadBucketIdRoute,
 }
 export const routeTree = rootRouteImport
