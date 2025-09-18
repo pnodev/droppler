@@ -9,6 +9,7 @@
     "start": "vite start"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/postcss": "^4.1.13",
     "@tanstack/react-query": "^5.66.0",
     "@tanstack/react-query-devtools": "^5.66.0",
@@ -16,6 +17,7 @@
     "@tanstack/react-router-devtools": "^1.131.44",
     "@tanstack/react-router-ssr-query": "^1.131.44",
     "@tanstack/react-start": "^1.131.44",
+    "@uploadthing/react": "^7.3.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.544.0",
@@ -24,7 +26,8 @@
     "react-dom": "^19.0.0",
     "redaxios": "^0.5.1",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.13",
+    "uploadthing": "^7.7.4"
   },
   "devDependencies": {
     "@types/node": "^22.5.4",
@@ -39,7 +42,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
-      "esbuild"
+      "esbuild",
+      "msgpackr-extract"
     ]
   }
 }

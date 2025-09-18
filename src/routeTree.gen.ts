@@ -8,35 +8,76 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createServerRootRoute } from '@tanstack/react-start/server'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UploadBucketIdRouteImport } from './routes/upload.$bucketId'
+import { ServerRoute as ApiUploadthingServerRouteImport } from './routes/api/uploadthing'
+
+const rootServerRouteImport = createServerRootRoute()
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UploadBucketIdRoute = UploadBucketIdRouteImport.update({
+  id: '/upload/$bucketId',
+  path: '/upload/$bucketId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUploadthingServerRoute = ApiUploadthingServerRouteImport.update({
+  id: '/api/uploadthing',
+  path: '/api/uploadthing',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/upload/$bucketId': typeof UploadBucketIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/upload/$bucketId': typeof UploadBucketIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/upload/$bucketId': typeof UploadBucketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/upload/$bucketId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/upload/$bucketId'
+  id: '__root__' | '/' | '/upload/$bucketId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  UploadBucketIdRoute: typeof UploadBucketIdRoute
+}
+export interface FileServerRoutesByFullPath {
+  '/api/uploadthing': typeof ApiUploadthingServerRoute
+}
+export interface FileServerRoutesByTo {
+  '/api/uploadthing': typeof ApiUploadthingServerRoute
+}
+export interface FileServerRoutesById {
+  __root__: typeof rootServerRouteImport
+  '/api/uploadthing': typeof ApiUploadthingServerRoute
+}
+export interface FileServerRouteTypes {
+  fileServerRoutesByFullPath: FileServerRoutesByFullPath
+  fullPaths: '/api/uploadthing'
+  fileServerRoutesByTo: FileServerRoutesByTo
+  to: '/api/uploadthing'
+  id: '__root__' | '/api/uploadthing'
+  fileServerRoutesById: FileServerRoutesById
+}
+export interface RootServerRouteChildren {
+  ApiUploadthingServerRoute: typeof ApiUploadthingServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,12 +89,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/upload/$bucketId': {
+      id: '/upload/$bucketId'
+      path: '/upload/$bucketId'
+      fullPath: '/upload/$bucketId'
+      preLoaderRoute: typeof UploadBucketIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
+}
+declare module '@tanstack/react-start/server' {
+  interface ServerFileRoutesByPath {
+    '/api/uploadthing': {
+      id: '/api/uploadthing'
+      path: '/api/uploadthing'
+      fullPath: '/api/uploadthing'
+      preLoaderRoute: typeof ApiUploadthingServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  UploadBucketIdRoute: UploadBucketIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+const rootServerRouteChildren: RootServerRouteChildren = {
+  ApiUploadthingServerRoute: ApiUploadthingServerRoute,
+}
+export const serverRouteTree = rootServerRouteImport
+  ._addFileChildren(rootServerRouteChildren)
+  ._addFileTypes<FileServerRouteTypes>()

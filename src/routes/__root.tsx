@@ -13,6 +13,7 @@ import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
+import { Header } from "~/components/Shell/Header";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -79,8 +80,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
-        {children}
+      <body className="flex flex-col h-screen px-6">
+        <Header />
+        <div className="px-3 max-w-(--page-width) w-full mx-auto">
+          {children}
+        </div>
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <Scripts />
