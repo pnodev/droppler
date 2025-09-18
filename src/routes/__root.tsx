@@ -82,7 +82,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="flex flex-col h-screen px-6">
         <Header />
-        <div className="px-3 max-w-(--page-width) w-full mx-auto">
+        <div className="px-5 max-w-(--page-width) w-full mx-auto">
           {children}
         </div>
         <TanStackRouterDevtools position="bottom-right" />
