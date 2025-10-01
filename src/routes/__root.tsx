@@ -82,7 +82,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <head>
           <HeadContent />
         </head>
-        <body className="flex flex-col h-screen px-6">
+        <body className="flex flex-col h-screen px-6 overflow-hidden">
           <Header />
           <div className="px-5 max-w-(--page-width) w-full mx-auto">
             {children}

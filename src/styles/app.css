@@ -165,3 +165,19 @@ body {
     ),
     linear-gradient(90deg, hsl(226, 47%, 26%), hsl(226, 47%, 26%));
 }
+
+@keyframes progress {
+  0% {
+    transform: translateX(0) scaleX(0);
+  }
+  40% {
+    transform: translateX(0) scaleX(0.4);
+  }
+  100% {
+    transform: translateX(100%) scaleX(0.5);
+  }
+}
+.animate-progress {
+  animation: progress 1s infinite linear;
+  transform-origin: left;
+}

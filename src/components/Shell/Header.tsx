@@ -9,7 +9,6 @@ import Logo from "~/assets/logo-large.svg";
 import { cn } from "~/lib/utils";
 import { Button } from "../ui/button";
 import { User } from "lucide-react";
-import type { To } from "@tanstack/react-router";
 
 export function Header() {
   return (
@@ -61,7 +60,7 @@ const NavigationLink = ({
   to,
   children,
 }: {
-  to: To;
+  to: string;
   children: React.ReactNode;
 }) => {
   return (
