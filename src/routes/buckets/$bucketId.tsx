@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { Settings } from "lucide-react";
+import { ArrowUpRight, Settings } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -62,10 +62,23 @@ function RouteComponent() {
   return (
     <PageArea>
       <PageTitle
-        actions={<BucketSettings bucket={data} />}
+        actions={
+          <div className="flex flex-row gap-2">
+            <Button asChild>
+              <Link
+                to={"/upload/$bucketId"}
+                params={{ bucketId: data.id }}
+                target="_blank"
+              >
+                Upload Link <ArrowUpRight />
+              </Link>
+            </Button>
+            <BucketSettings bucket={data} />
+          </div>
+        }
         loading={isBucketLoading || isFilesLoading}
       >
-        Bucket {data.name}
+        {data.name}
       </PageTitle>
       <DataTable columns={columns} data={files} deletingIds={deletingIds} />
     </PageArea>

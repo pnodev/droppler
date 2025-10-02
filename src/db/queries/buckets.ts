@@ -4,6 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getWebRequest } from "@tanstack/react-start/server";
 import { db } from "..";
 import z from "zod";
+import { useEventSource } from "~/hooks/use-event-source";
 
 const fetchBuckets = createServerFn({ method: "GET" }).handler(async () => {
   const user = await getAuth(getWebRequest());
@@ -58,5 +59,13 @@ const bucketsQueryOptions = (bucketId: string) =>
 
 export const useBucketQuery = (bucketId: string) => {
   const queryData = useSuspenseQuery(bucketsQueryOptions(bucketId));
+
+  useEventSource({
+    topics: [`bucket-${bucketId}`],
+    callback: (_data) => {
+      queryData.refetch();
+    },
+  });
+
   return { ...queryData };
 };

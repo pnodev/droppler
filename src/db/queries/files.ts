@@ -5,6 +5,7 @@ import z from "zod";
 import { db } from "..";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { utapi } from "~/server/uploadthing";
+import { useEventSource } from "~/hooks/use-event-source";
 
 const fetchFilesForBucket = createServerFn({ method: "GET" })
   .validator(z.object({ bucketId: z.string() }))
@@ -44,5 +45,13 @@ const filesQueryOptions = (bucketId: string) =>
 
 export const useFilesQuery = (bucketId: string) => {
   const queryData = useSuspenseQuery(filesQueryOptions(bucketId));
+
+  useEventSource({
+    topics: [`files-for-bucket-${bucketId}`],
+    callback: (_data) => {
+      queryData.refetch();
+    },
+  });
+
   return { ...queryData };
 };

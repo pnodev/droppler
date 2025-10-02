@@ -9,6 +9,7 @@ import { v7 as uuid } from "uuid";
 import z from "zod";
 import { and, eq } from "drizzle-orm";
 import { utapi } from "~/server/uploadthing";
+import { sync } from "./sync";
 
 const createFile = createServerFn({ method: "POST" })
   .validator(insertFileValidator)
@@ -25,6 +26,8 @@ const createFile = createServerFn({ method: "POST" })
       createdAt: new Date(),
       updatedAt: new Date(),
     });
+
+    await sync(`files-for-bucket-${data.bucketId}`, { fileId: data.id });
   });
 
 export const useCreateFileMutation = () => {
@@ -71,6 +74,8 @@ const deleteFile = createServerFn({ method: "POST" })
           eq(files.owner, user.userId as string)
         )
       );
+
+    await sync(`files-for-bucket-${file.bucketId}`, { fileId: data.fileId });
 
     return { file };
   });

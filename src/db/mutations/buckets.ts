@@ -7,6 +7,7 @@ import { useRouter } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { v7 as uuid } from "uuid";
 import { and, eq } from "drizzle-orm";
+import { sync } from "./sync";
 
 const createBucket = createServerFn({ method: "POST" })
   .validator(insertBucketValidator)
@@ -24,6 +25,8 @@ const createBucket = createServerFn({ method: "POST" })
       createdAt: new Date(),
       updatedAt: new Date(),
     });
+
+    await sync(`bucket-${data.id}`, { bucketId: data.id });
   });
 
 export const useCreateBucketMutation = () => {
@@ -62,6 +65,8 @@ const updateBucket = createServerFn({ method: "POST" })
           eq(buckets.id, data.id as string)
         )
       );
+
+    await sync(`bucket-${data.id}`, { bucketId: data.id });
   });
 
 export const useUpdateBucketMutation = () => {
