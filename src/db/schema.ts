@@ -59,6 +59,7 @@ export const files = createTable(
     size: integer("size").notNull(),
     type: varchar("type", { length: 256 }).notNull(),
     url: varchar("url", { length: 256 }).notNull(),
+    key: varchar("key", { length: 256 }).notNull(),
     bucketId: uuid("bucket_id").notNull(),
     owner: varchar("owner", { length: 256 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -89,5 +90,6 @@ export type FileInput = {
   size: number;
   type: string;
   url: string;
+  key: string;
   bucketId: string;
 };

@@ -4,7 +4,10 @@ import { cn } from "~/lib/utils";
 
 export const List = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ul role="list" className="divide-y divide-gray-100 -mx-6 [&_li_a]:px-6">
+    <ul
+      role="list"
+      className="divide-y divide-gray-100 -mx-6 -mt-6 [&_li_a]:px-6"
+    >
       {children}
     </ul>
   );

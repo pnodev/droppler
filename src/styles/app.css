@@ -181,3 +181,20 @@ body {
   animation: progress 1s infinite linear;
   transform-origin: left;
 }
+
+.animate-loading-bounce {
+  opacity: 0.7; /* starting opacity */
+  animation: bounceOpacity 1.2s ease-in-out infinite;
+}
+
+@keyframes bounceOpacity {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}

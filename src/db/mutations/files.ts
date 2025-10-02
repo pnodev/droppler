@@ -6,6 +6,9 @@ import { db } from "..";
 import { useRouter } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { v7 as uuid } from "uuid";
+import z from "zod";
+import { and, eq } from "drizzle-orm";
+import { utapi } from "~/server/uploadthing";
 
 const createFile = createServerFn({ method: "POST" })
   .validator(insertFileValidator)
@@ -35,6 +38,54 @@ export const useCreateFileMutation = () => {
       router.invalidate();
       queryClient.invalidateQueries({
         queryKey: ["files", variables.bucketId],
+      });
+    },
+  });
+};
+
+const deleteFile = createServerFn({ method: "POST" })
+  .validator(z.object({ fileId: z.string() }))
+  .handler(async ({ data }) => {
+    const user = await getAuth(getWebRequest());
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const file = await db.query.files.findFirst({
+      where: (model, { eq, and }) =>
+        and(eq(model.id, data.fileId), eq(model.owner, user.userId as string)),
+    });
+
+    if (!file) {
+      throw new Error("File not found");
+    }
+
+    await utapi.deleteFiles([file.key]);
+
+    await db
+      .delete(files)
+      .where(
+        and(
+          eq(files.id, data.fileId),
+          eq(files.bucketId, file.bucketId),
+          eq(files.owner, user.userId as string)
+        )
+      );
+
+    return { file };
+  });
+
+export const useDeleteFileMutation = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const _deleteFile = useServerFn(deleteFile);
+
+  return useMutation({
+    mutationFn: async (data: { fileId: string }) => await _deleteFile({ data }),
+    onSuccess: (data) => {
+      router.invalidate();
+      queryClient.invalidateQueries({
+        queryKey: ["files", data.file.bucketId],
       });
     },
   });

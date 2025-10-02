@@ -25,6 +25,7 @@ function RouteComponent() {
                 type: file.type,
                 url: file.ufsUrl,
                 bucketId: params.bucketId,
+                key: file.key,
               })
             )
           );

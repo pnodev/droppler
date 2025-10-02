@@ -4,6 +4,7 @@ import { getWebRequest } from "@tanstack/react-start/server";
 import z from "zod";
 import { db } from "..";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { utapi } from "~/server/uploadthing";
 
 const fetchFilesForBucket = createServerFn({ method: "GET" })
   .validator(z.object({ bucketId: z.string() }))
@@ -22,7 +23,17 @@ const fetchFilesForBucket = createServerFn({ method: "GET" })
       orderBy: (fields, { desc }) => desc(fields.createdAt),
     });
 
-    return files;
+    return await Promise.all(
+      files.map(async (file) => {
+        const presignedUrl = await utapi.generateSignedURL(file.key, {
+          expiresIn: 60 * 60,
+        });
+        return {
+          ...file,
+          url: presignedUrl.ufsUrl,
+        };
+      })
+    );
   });
 
 const filesQueryOptions = (bucketId: string) =>

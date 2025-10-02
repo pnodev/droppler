@@ -5,6 +5,8 @@ import { Settings } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { DataTable } from "~/components/Files/DataTable";
+import { getDataTableColumns } from "~/components/Files/DataTableColumns";
 import { PageArea } from "~/components/Shell/PageArea";
 import { Button } from "~/components/ui/button";
 import { FormCheckbox } from "~/components/ui/checkbox";
@@ -27,6 +29,7 @@ import {
 } from "~/components/ui/sheet";
 import { Textarea } from "~/components/ui/textarea";
 import { useUpdateBucketMutation } from "~/db/mutations/buckets";
+import { useDeleteFileMutation } from "~/db/mutations/files";
 import { useBucketQuery } from "~/db/queries/buckets";
 import { useFilesQuery } from "~/db/queries/files";
 import { Bucket } from "~/db/schema";
@@ -41,6 +44,20 @@ function RouteComponent() {
   const { data: files, isLoading: isFilesLoading } = useFilesQuery(
     params.bucketId
   );
+  const deleteFile = useDeleteFileMutation();
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+
+  const handleDelete = async (id: string) => {
+    setDeletingIds((prev) => new Set(prev).add(id));
+    await deleteFile.mutateAsync({ fileId: id });
+    setDeletingIds((prev) => {
+      const copy = new Set(prev);
+      copy.delete(id);
+      return copy;
+    });
+  };
+
+  const columns = getDataTableColumns(handleDelete);
 
   return (
     <PageArea>
@@ -50,7 +67,7 @@ function RouteComponent() {
       >
         Bucket {data.name}
       </PageTitle>
-      <pre>{JSON.stringify(files, null, 2)}</pre>
+      <DataTable columns={columns} data={files} deletingIds={deletingIds} />
     </PageArea>
   );
 }
